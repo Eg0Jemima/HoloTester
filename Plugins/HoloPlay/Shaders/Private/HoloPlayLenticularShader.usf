@@ -1,0 +1,90 @@
+#include "/Engine/Public/Platform.ush"
+#include "/Engine/Private/Common.ush"
+
+Texture2D InTexture;
+SamplerState InTextureSampler;
+
+void CopyToQuiltVS
+(
+	float4 InPosition : ATTRIBUTE0,
+	float2 InUV : ATTRIBUTE1,
+	out float2 OutUV : TEXCOORD0,
+	out float4 Output : SV_POSITION
+)
+{
+ 	Output = InPosition;
+	OutUV = InUV;
+}
+ 
+float4 CopyToQuiltPS
+(
+	in float2 uv : TEXCOORD0
+) : SV_Target0
+{
+	float4 Pix = Texture2DSample(InTexture, InTextureSampler, uv);
+	return Pix;
+}
+
+void LenticularVS
+(
+	float4 InPosition : ATTRIBUTE0,
+	float2 InUV : ATTRIBUTE1,
+	out float2 OutUV : TEXCOORD0,
+	out float4 Output : SV_POSITION
+)
+{
+ 	Output = InPosition;
+	OutUV = InUV;
+}
+ 
+
+float4 LenticularPS
+(
+	in float2 uv : TEXCOORD0
+) : SV_Target0
+{
+    // UE4. Using for Capture Movie
+    if (PSConstant.QuiltMode == 1)
+    {
+        return Texture2DSample(InTexture, InTextureSampler, uv);
+    }
+
+    // first handle aspect
+    float2 viewUV = uv;
+    viewUV -= 0.5;
+    float modx = saturate(
+					step(PSConstant.aspect.y, PSConstant.aspect.x) * step(PSConstant.aspect.z, 0.5) +
+					step(PSConstant.aspect.x, PSConstant.aspect.y) * step(0.5, PSConstant.aspect.z));
+    viewUV.x = modx * viewUV.x * PSConstant.aspect.x / PSConstant.aspect.y +
+						   (1.0 - modx) * viewUV.x;
+    viewUV.y = modx * viewUV.y +
+						   (1.0 - modx) * viewUV.y * PSConstant.aspect.y / PSConstant.aspect.x;
+    viewUV += 0.5;
+    clip(viewUV);
+    clip(-viewUV + 1.0);
+
+    // then sample quilt
+    float4 col = float4(0, 0, 0, 1);
+    for (int subpixel = 0; subpixel < 3; subpixel++)
+    {
+		// determine view for this subpixel based on pitch, slope, center
+        float viewLerp = uv.x + subpixel * PSConstant.subp;
+        viewLerp += uv.y * PSConstant.slope;
+        viewLerp *= PSConstant.pitch;
+        viewLerp -= PSConstant.center;
+		// make sure it's positive and between 0-1
+        viewLerp = 1.0 - fmod(viewLerp + ceil(abs(viewLerp)), 1.0);
+		// translate to quilt coordinates
+        float view = floor(viewLerp * PSConstant.tile.z); // multiply by total views
+        float2 quiltCoords = float2(
+						(fmod(view, PSConstant.tile.x) + viewUV.x) / PSConstant.tile.x,
+						(floor(view / PSConstant.tile.x) + viewUV.y) / PSConstant.tile.y
+					);
+        quiltCoords *= PSConstant.viewPortion.xy;
+
+        // UE4 only. Flip Y Coord in order to match pixels
+        if (PSConstant.FlipYTexCoords == 1) quiltCoords.y = 1 - quiltCoords.y;
+        col[subpixel] = Texture2DSample(InTexture, InTextureSampler, quiltCoords)[subpixel];
+    }
+    return col;
+}

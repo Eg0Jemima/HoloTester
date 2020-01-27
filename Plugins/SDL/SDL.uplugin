@@ -1,0 +1,19 @@
+{	
+	"FriendlyName": "SDL",
+	"FileVersion" : 3,
+	"Version" : 1,
+	"VersionName": "1.0",
+	"CreatedBy": "Geodesic Games",
+	"CreatedByURL": "http://geodesic.games",
+	"Description": "SDL lib",
+	"EnabledByDefault" : true,
+	"Modules": 
+	[
+		{
+			"Name": "SDL",
+			"Type": "Runtime",
+			"WhitelistPlatforms": [ "Win64", "Linux", "mac" ],
+			"LoadingPhase": "PostConfigInit"
+		}
+	]
+}

@@ -1,0 +1,42 @@
+{
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "1.0",
+  "FriendlyName": "HoloPlayPro",
+  "Description": "HoloPlayPro UE4 support",
+  "Category": "3D Screen",
+  "CreatedBy": "Geodesic Games",
+  "CreatedByURL": "",
+  "DocsURL": "",
+  "MarketplaceURL": "",
+  "SupportURL": "",
+  "CanContainContent": true,
+  "IsBetaVersion": false,
+  "Installed": false,
+  "Modules": [
+    {
+      "Name": "HoloPlayProRuntime",
+      "Type": "Runtime",
+      "LoadingPhase": "PostConfigInit",
+      "WhitelistPlatforms": [ "Win64" ]
+    },
+    {
+      "Name": "HoloPlayProEditor",
+      "Type": "Editor",
+      "LoadingPhase": "Default",
+      "WhitelistPlatforms": [ "Win64" ]
+    },
+    {
+      "Name": "HoloPlayProInput",
+      "Type": "Runtime",
+      "LoadingPhase": "Default",
+      "WhitelistPlatforms": [ "Win64" ]
+    }
+  ],
+  "Plugins": [
+    {
+      "Name": "HoloPlay",
+      "Enabled": true
+    }
+  ]
+}

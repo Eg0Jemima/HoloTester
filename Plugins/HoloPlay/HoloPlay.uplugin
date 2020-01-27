@@ -1,0 +1,36 @@
+{
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "1.0",
+  "FriendlyName": "HoloPlay",
+  "Description": "HoloPlay UE4 SDK helps you build 3D experiences for your Looking Glass.",
+  "Category": "3D Screen",
+  "CreatedBy": "Geodesic Games",
+  "CreatedByURL": "",
+  "DocsURL": "",
+  "MarketplaceURL": "",
+  "SupportURL": "",
+  "CanContainContent": true,
+  "IsBetaVersion": false,
+  "Installed": false,
+  "Modules": [
+    {
+      "Name": "HoloPlayRuntime",
+      "Type": "Runtime",
+      "LoadingPhase": "PostConfigInit",
+      "WhitelistPlatforms": [ "Win64" ]
+    },
+    {
+      "Name": "HoloPlayEditor",
+      "Type": "Editor",
+      "LoadingPhase": "Default",
+      "WhitelistPlatforms": [ "Win64" ]
+    }
+  ],
+  "Plugins": [
+    {
+      "Name": "SDL",
+      "Enabled": true
+    }
+  ]
+}

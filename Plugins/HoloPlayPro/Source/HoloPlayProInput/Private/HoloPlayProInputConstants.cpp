@@ -1,0 +1,4 @@
+#include "HoloPlayProInputDefinitions.h"
+
+const FKey FHoloPlayProInputKeys::GlobalGesture_DoubleTap(GlobalGestureDoubleTapName);
+const FKey FHoloPlayProInputKeys::HoloPlayViewportGesture_DoubleTap(HoloPlayViewportGestureDoubleTapName);
